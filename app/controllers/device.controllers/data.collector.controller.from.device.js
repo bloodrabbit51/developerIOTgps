@@ -9,9 +9,6 @@ var config = require('./../../config/config.json');
 
 
 module.exports = function(){
-	var tcpInputEncoding = config.get('tcp:input_log_encoding') || 'ascii';
-    var tcpIdleTimeout = config.get('tcp:idle_timeout') || 30000;
-    var portTcp = config.get('tcp:port');
     var tcp = net.createServer(function (socket) {
 
         var client = 'host ' + socket.remoteAddress + ':' + socket.remotePort;
