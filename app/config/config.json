@@ -1,0 +1,14 @@
+{
+  "tcp": {
+    "port": 7071,
+    "input_log_encoding": "ascii",
+    "idle_timeout": 60000
+  },
+  "http": {
+    "port": 7070
+  },
+  "logging": {
+  },
+  "socketio": {
+  }
+}
