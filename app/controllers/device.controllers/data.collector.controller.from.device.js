@@ -5,7 +5,8 @@
 "use strict";
 
 var net = require('net');
-var config = require('./../../config/config.json');
+var config = require('./../../config/config.json'),
+    parser = require('./parse.js');
 
 module.exports = function(){
     var tcp = net.createServer(function (socket) {
