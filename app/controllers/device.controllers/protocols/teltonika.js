@@ -410,6 +410,7 @@ function parseDataPacket(socket, data)
                         engine_rpm: position.rpm
 					});
 					gps.push(deviceData);
+                                        console.log(deviceData);
 
 					deviceData.save(function (err) {
                        if(err){
@@ -418,11 +419,11 @@ function parseDataPacket(socket, data)
                            console.log('insertion of data in database successfull');
                        }
                     });
-				}
+		}
             }
         }
     }
-
+    console.log('data is here:',gps);
     return null;
 }
 
