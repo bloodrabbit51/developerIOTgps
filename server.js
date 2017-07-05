@@ -15,5 +15,5 @@ app.route('/').get(function (req,res) {
 });
 
 app.listen(serverconfig.http.port,function () {
-    console.log("http server is running on port number: 8080");
+    console.log("http server is running on port number: 7070");
 });

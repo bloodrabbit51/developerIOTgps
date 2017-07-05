@@ -421,8 +421,9 @@ function parseDataPacket(socket, data)
             }
         }
 
-        console.log( gps);
-        return gps;
+        console.log('found you',gps);
+       
+	 return gps;
     }
 
     return null;
