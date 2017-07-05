@@ -1,11 +1,9 @@
 ﻿
 var parser = {};
-module.exports = parser;
+var deviceDataModel = require('../../../models/device.data.schema.js');
 
 parser.canParse = function(buffer)
 {
-    
-
     if (!Buffer.isBuffer(buffer)) {
         console.log("Data packet is not of Buffer type.");
         return false;
@@ -26,20 +24,20 @@ parser.canParse = function(buffer)
     }
 
     if (buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 0 && buffer[3] == 0) {
-        //console.log("Found leading 4 zeros. Going on.");
+
     } else {
-        //console.log("Not found leading 4 zeros. Giving up.");
+
         return false;
     }
 
    
     var lengthAVL = buffer.readUInt32BE(4);
     if ( (4 + 4 + lengthAVL + 4) === buffer.length ) {
-        //console.log("Ok - data packet structure is supported.");
+
         return true;
     }
     return false;
-}
+};
 
 parser.parse = function(socket, buffer)
 {
@@ -47,22 +45,17 @@ parser.parse = function(socket, buffer)
     if (buffer.length == 17)
     {
         if (buffer[0] == 0 && buffer[1] == 15) {
-            
             return parseInitPacket(socket, buffer);
         } else {
-            
             return null;
         }
     }
 
-    //  type #2 - Data packet:
     if (buffer.length > 12) {
         return parseDataPacket(socket, buffer)
     }
-
-    //console.log("It's not a Bitrek / Teltonika data packet.");
     return null;
-}
+};
 
 function parseInitPacket(socket, buffer)
 {
@@ -175,15 +168,15 @@ function parseDataPacket(socket, data)
 
                 position.status = "Na";
                 position.alarm = "Na";
-		position.fuel = "Na";
-		position.rpm = "Na";
-		position.tps = "Na";
-		position.state = "Na";
-		position.speedobd = "Na";
-		position.one = "Na";
-		position.two = "Na";
-		position.three = "Na";
-		position.four = "Na";
+		        position.fuel = "Na";
+		        position.rpm = "Na";
+		        position.tps = "Na";
+		        position.state = "Na";
+		        position.speedobd = "Na";
+		        position.one = "Na";
+		        position.two = "Na";
+		        position.three = "Na";
+		        position.four = "Na";
 
                 if (position.satellite >= 3)
                     position.status = "A";
@@ -199,7 +192,6 @@ function parseDataPacket(socket, data)
                 position.ioCount = bytesToInt(buf, i, 1);
                 i++;
 
-                //read 1 byte
                 {
                     var cnt = bytesToInt(buf, i, 1);
                     i++;
@@ -307,8 +299,7 @@ function parseDataPacket(socket, data)
                             case RPM:
                             {
                                 var value = bytesToInt(buf, i, 2);
-                                //position.alarm += string.Format("Speed", value);
-				console.log('RPM value is: ' + value);
+
 				position.rpm = ''+value;
                                 i += 2;
                                 break;
@@ -357,7 +348,6 @@ function parseDataPacket(socket, data)
                     }
                 }
 
-                //read 8 byte
                 {
                     var cnt = bytesToInt(buf, i, 1);
                     i++;
@@ -365,10 +355,6 @@ function parseDataPacket(socket, data)
                     {
                         var id = bytesToInt(buf, i, 1);
                         i++;
-
-                       // var io = bytesToInt(buf, i, 8);
-                       // position.status += string.Format(",{0} {1}", id, io);
-                       // i += 8;
 
 			switch (id)
                         {
@@ -414,23 +400,33 @@ function parseDataPacket(socket, data)
                 var imei = socket.device_imei;
 
 				if (position.lng != 0 || position.lat != 0) {
-					var resData = {IMEI: imei, utcDateTime: position.timestamp, latitude: position.lat, longitude: position.lng, altitude: position.alt, heading: 0, speed: position.speed, fuel: position.fuel, rpm: position.rpm, tps: position.tps, state: position.state, speedobd: position.speedobd, sensorone: position.one, sensortwo: position.two, sensorthree: position.three, sensorfour: position.four};
-					//console.log( resData, position);
-					gps.push( resData);
+					var deviceData = deviceDataModel({
+                        IMEI: imei,
+                        latitude: position.lat,
+                        longitude: position.lng,
+                        altitude: position.alt,
+                        vehicle_speed: position.speed,
+                        fuel: position.fuel,
+                        engine_rpm: position.rpm
+					});
+					gps.push(deviceData);
+
+					deviceData.save(function (err) {
+                       if(err){
+                           console.log("error in data insertion");
+                       } else {
+                           console.log('insertion of data in database successfull');
+                       }
+                    });
 				}
             }
         }
-
-        console.log('found you',gps);
-       
-	 return gps;
     }
 
     return null;
-};
+}
 
-function crc16_teltonika(data, p, size)
-{
+function crc16_teltonika(data, p, size) {
     var crc16_result = 0x0000;
     for (var i = p; i < p + size; i++)
     {
@@ -441,20 +437,18 @@ function crc16_teltonika(data, p, size)
         }
     }
     return crc16_result;
-};
+}
 
-function bytesToInt(array, p, size)
-{
+function bytesToInt(array, p, size) {
     var value = 0;
     for (var i = p; i <= p + size - 1; i++) {
         value = (value * 256) + array[i];
     }
     return value;
-};
+}
 
 
-function stringToBytes(str)
-{
+function stringToBytes(str) {
     var bytes = [];
     for (var i = 0; i < str.length; ++i)
     {
@@ -463,6 +457,6 @@ function stringToBytes(str)
         bytes.push(charCode);
     }
     return bytes;
-};
+}
 
-// --- End ------------------------------------------------------------
+module.exports = parser;

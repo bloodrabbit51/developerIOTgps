@@ -6,16 +6,14 @@
 
 var net = require('net');
 var config = require('./../../config/config.json');
-var parser = require('./parse');
-
 
 module.exports = function(){
     var tcp = net.createServer(function (socket) {
-
-            
+           
         socket.on('connect',function(){
         	console.log('successfully connected to tcp client');
         });
+
         socket.on('data', function (deviceData) {
             console.log('data recieved from device: ',typeof deviceData);
           // console.log("data:",JSON.stringify(deviceData));
@@ -27,15 +25,22 @@ module.exports = function(){
             } catch (ex) {
              	console.log('error in parsing data');
             }
-
         });
+
+        
 
         socket.on('close', function () {
             console.log('tcp connection closed');
         });
 
+
         socket.on('error', function (err) {
             console.log('error in tcp socket connection:',err);
+        });
+
+
+        socket.on('error', function (err) {
+            console.log('error in tcp connection: ',err);
         });
 
     }).listen(config.tcp.port,function(){

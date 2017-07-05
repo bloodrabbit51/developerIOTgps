@@ -10,5 +10,8 @@
   "logging": {
   },
   "socketio": {
+  },
+  "mongo":{
+    "db": "mongodb://52.43.200.112:27017/demo/"
   }
 }
