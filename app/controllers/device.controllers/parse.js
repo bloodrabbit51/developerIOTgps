@@ -2,8 +2,8 @@ var parser = {};
 module.exports = parser;
 
 var teltonika = require('./protocols/teltonika');
-
-var protocols = [globalsat, teltonika]; //TODO: add more protocol modules here
+var _ = require('underscore');
+var protocols = [teltonika]; //TODO: add more protocol modules here
 
 parser.parse = function (socket, buffer)
 {
@@ -18,7 +18,7 @@ parser.parse = function (socket, buffer)
         try {
             supported = provider.canParse( buffer );
         } catch(ex) {
-            log.error('protocol provider failure: ' + ex);
+            console.log('protocol provider failure: ' + ex);
         }
         //log.debug('does provider understand the protocol ? ' + supported);
         if (supported == -1) {
@@ -36,7 +36,7 @@ parser.parse = function (socket, buffer)
     try {
         return provider.parse(socket, buffer);
     } catch(ex) {
-        log.error('parsing failure: ' + ex);
+        console.log('parsing failure: ' + ex);
     }
 
     
