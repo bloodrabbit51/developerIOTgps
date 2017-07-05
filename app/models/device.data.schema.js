@@ -3,6 +3,10 @@ var mongoose = require('mongoose'),
 
 
 var deviceDataSchema = new Schema({
+    IMEI : {
+        type: String,
+        default:''
+    },
     latitude:{
         type:String,
         default:''
