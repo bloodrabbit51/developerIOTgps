@@ -42,12 +42,18 @@ parser.canParse = function(buffer) {
     return false;
 };
 
+<<<<<<< HEAD
 
 
 
 
 parser.parse = function(socket, buffer) {
     
+=======
+parser.parse = function(socket, buffer)
+{
+   console.log('in'); 
+>>>>>>> 788ffeb8c6b5cfc9edd69f5e4585d2b58957ce1f
     if (buffer.length == 17)
     {
         if (buffer[0] == 0 && buffer[1] == 15) {
@@ -422,7 +428,7 @@ function parseDataPacket(socket, data) {
 
 					deviceData.save(function (err) {
                        if(err){
-                           console.log("error in data insertion");
+                           console.log("error in data insertion",err);
                        } else {
                            console.log('insertion of data in database successfull');
                        }
