@@ -1,8 +1,8 @@
-var mongoose = require('mongoose'),
+let mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 
-var deviceDataSchema = new Schema({
+let deviceDataSchema = new Schema({
     IMEI : {
         type: String,
         default:''
@@ -61,5 +61,5 @@ var deviceDataSchema = new Schema({
     }
 });
 
-var deviceData = mongoose.model('devicedata',deviceDataSchema);
+let deviceData = mongoose.model('devicedata',deviceDataSchema);
 module.exports = deviceData;

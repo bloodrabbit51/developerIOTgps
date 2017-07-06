@@ -1,14 +1,14 @@
 "use strict";
-var parser = {};
-var teltonika = require('./protocols/teltonika');
-var protocols = [teltonika];
+let parser = {};
+let teltonika = require('./protocols/teltonika');
+let protocols = [teltonika];
 
 parser.parse = function (socket, buffer) {
-    var provider;
-    for (var i = 0; i < protocols.length; i++) {
+    let provider;
+    for (let i = 0; i < protocols.length; i++) {
         try {
             provider = protocols[i];
-            var supported = -1;
+            let supported = -1;
             try {
                 supported = provider.canParse(buffer);
             } catch (ex) {

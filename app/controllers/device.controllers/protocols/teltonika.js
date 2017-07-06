@@ -1,6 +1,6 @@
 ﻿
-var parser = {};
-var deviceDataModel = require('../../../models/device.data.schema.js');
+let parser = {};
+let deviceDataModel = require('../../../models/device.data.schema.js');
 
 
 
@@ -34,7 +34,7 @@ parser.canParse = function(buffer) {
     }
 
    
-    var lengthAVL = buffer.readUInt32BE(4);
+    letlengthAVL = buffer.readUInt32BE(4);
     if ( (4 + 4 + lengthAVL + 4) === buffer.length ) {
 
         return true;
@@ -42,18 +42,9 @@ parser.canParse = function(buffer) {
     return false;
 };
 
-<<<<<<< HEAD
 
-
-
-
-parser.parse = function(socket, buffer) {
-    
-=======
 parser.parse = function(socket, buffer)
 {
-   console.log('in'); 
->>>>>>> 788ffeb8c6b5cfc9edd69f5e4585d2b58957ce1f
     if (buffer.length == 17)
     {
         if (buffer[0] == 0 && buffer[1] == 15) {
@@ -62,18 +53,16 @@ parser.parse = function(socket, buffer)
             return null;
         }
     }
-
     if (buffer.length > 12) {
-        return parseDataPacket(socket, buffer)
+        return parseDataPacket(socket, buffer);
     }
-    return null;
 };
 
 
 
 
 function parseInitPacket(socket, buffer) {
-    var imei = buffer.toString('ascii').substr(2);
+    letimei = buffer.toString('ascii').substr(2);
     socket.device_imei = imei; // keep device's IMEI (ID) in socket connection
     socket.write(String.fromCharCode(0x01)); // reply '1' to device, to indicate connection has been initialized.
     console.log("Session initialized with device_imei: " + socket.device_imei);
@@ -82,66 +71,58 @@ function parseInitPacket(socket, buffer) {
 
 
 function parseDataPacket(socket, data) {
-    var propName = 'device_imei';
+    letpropName = 'device_imei';
     if (!socket.hasOwnProperty(propName)) {
         console.log( "Socket's property '"+propName+"' undefined. Procession stopped." );
         socket.write(0); // reply '0' to deny session.
         // here, socket is still open.
         return;
     }
-
-	console.log('Start parsing data in Teltonika format, for IMEI: ' + socket.device_imei);
-
-    var buf;
+    letbuf;
 	if (data instanceof Buffer) {
         buf = data;
     } else {
         buf = stringToBytes(data);
     }
-
-    var gps = [];
-
-    var sizeAVL = bytesToInt(buf, 4, 4);
-    var rCRC = bytesToInt(buf, buf.length - 4, 4);
-    var cCRC = crc16_teltonika(buf, 8, sizeAVL);
-
-	
-    var i = 8;
-
+    letgps = [];
+    letsizeAVL = bytesToInt(buf, 4, 4);
+    letrCRC = bytesToInt(buf, buf.length - 4, 4);
+    letcCRC = crc16_teltonika(buf, 8, sizeAVL);
+    leti = 8;
     if (sizeAVL == buf.length - 4 * 3 && rCRC == cCRC)
     {
-        var codec = bytesToInt(buf, i, 1);
+        letcodec = bytesToInt(buf, i, 1);
         i++;
-        var recs = bytesToInt(buf, i, 1);
+        letrecs = bytesToInt(buf, i, 1);
         i++;
         console.log( codec, recs);
         
-	var ACC = 1;
-	var DOOR = 2;
-	var Analog = 4;
-	var GSM = 21;
-	var RPM = 6;
-	var VOLTAGE = 7;
-	var GPSPOWER = 8;
-	var TEMPERATURE = 9;
-	var ODOMETER = 16;
-	var STOP = 9;
-	var TRIP = 28;
-	var IMMOBILIZER = 29;
-	var AUTHORIZED = 30;
-	var GREEDRIVING = 253;
-	var OVERSPEED = 33;
-	var TPS = 7;
-	var SPEED = 8;
-	var ONE = 76;
-	var TWO = 77;
-	var THREE = 79;
-	var FOUR = 71;
+	letACC = 1;
+	letDOOR = 2;
+	letAnalog = 4;
+	letGSM = 21;
+	letRPM = 6;
+	letVOLTAGE = 7;
+	letGPSPOWER = 8;
+	letTEMPERATURE = 9;
+	letODOMETER = 16;
+	letSTOP = 9;
+	letTRIP = 28;
+	letIMMOBILIZER = 29;
+	letAUTHORIZED = 30;
+	letGREEDRIVING = 253;
+	letOVERSPEED = 33;
+	letTPS = 7;
+	letSPEED = 8;
+	letONE = 76;
+	letTWO = 77;
+	letTHREE = 79;
+	letFOUR = 71;
         if (codec == 0x08)
         {
-            for (var n = 0; n <1; n++)
+            for (letn = 0; n <1; n++)
             {
-                var position = {};
+                letposition = {};
 
                 position.timestamp = bytesToInt(buf, i, 8);
                 i += 8;
@@ -207,25 +188,25 @@ function parseDataPacket(socket, data) {
                 i++;
 
                 {
-                    var cnt = bytesToInt(buf, i, 1);
+                    letcnt = bytesToInt(buf, i, 1);
                     i++;
-                    for (var j = 0; j < cnt; j++)
+                    for (letj = 0; j < cnt; j++)
                     {
-                        var id = bytesToInt(buf, i, 1);
+                        letid = bytesToInt(buf, i, 1);
                         i++;
                         //Add output status
                         switch (id)
                         {
                             case SPEED:
                             {
-                                var value = bytesToInt(buf, i, 1);
+                                letvalue = bytesToInt(buf, i, 1);
 				position.speedobd = ''+value;
                                 i++;
                                 break;
                             }
                             case TPS:
                             {
-                                var value = bytesToInt(buf, i, 1);
+                                letvalue = bytesToInt(buf, i, 1);
                                 
 				position.tps = ''+value;
                                 i++;
@@ -233,7 +214,7 @@ function parseDataPacket(socket, data) {
                             }
                             case GSM:
                             {
-                                var value = bytesToInt(buf, i, 1);
+                                letvalue = bytesToInt(buf, i, 1);
                                 
 				console.log('gsm gsm gsm : '+ value);
                                 i++;
@@ -242,7 +223,7 @@ function parseDataPacket(socket, data) {
                             }
                             case STOP:
                             {
-                                var value = bytesToInt(buf, i, 1);
+                                letvalue = bytesToInt(buf, i, 1);
 				                position.fuel = ''+value;
 				                log.debug('Fuel level value : '+ value);
                                 i++;
@@ -250,14 +231,14 @@ function parseDataPacket(socket, data) {
                             }
                             case IMMOBILIZER:
                             {
-                                var value = bytesToInt(buf, i, 1);
+                                letvalue = bytesToInt(buf, i, 1);
                                 position.alarm = value == 0 ? "Activate Anti-carjacking success" : "Emergency release success";
                                 i++;
                                 break;
                             }
                             case GREEDRIVING:
                             {
-                                var value = bytesToInt(buf, i, 1);
+                                letvalue = bytesToInt(buf, i, 1);
                                 switch (value)
                                 {
                                     case 1:
@@ -293,18 +274,18 @@ function parseDataPacket(socket, data) {
 
                 //read 2 byte
                 {
-                    var cnt = bytesToInt(buf, i, 1);
+                    letcnt = bytesToInt(buf, i, 1);
                     i++;
-                    for (var j = 0; j < cnt; j++)
+                    for (letj = 0; j < cnt; j++)
                     {
-                        var id = bytesToInt(buf, i, 1);
+                        letid = bytesToInt(buf, i, 1);
                         i++;
 
                         switch (id)
                         {
                             case Analog:
                             {
-                                var value = bytesToInt(buf, i, 2);
+                                letvalue = bytesToInt(buf, i, 2);
                                 if (value < 12)
                                     //position.alarm += string.Format("Low voltage", value);
                                 i += 2;
@@ -312,7 +293,7 @@ function parseDataPacket(socket, data) {
                             }
                             case RPM:
                             {
-                                var value = bytesToInt(buf, i, 2);
+                                letvalue = bytesToInt(buf, i, 2);
 
 				position.rpm = ''+value;
                                 i += 2;
@@ -330,25 +311,25 @@ function parseDataPacket(socket, data) {
 
                 //read 4 byte
                 {
-                    var cnt = bytesToInt(buf, i, 1);
+                    letcnt = bytesToInt(buf, i, 1);
                     i++;
-                    for (var j = 0; j < cnt; j++)
+                    for (letj = 0; j < cnt; j++)
                     {
-                        var id = bytesToInt(buf, i, 1);
+                        letid = bytesToInt(buf, i, 1);
                         i++;
 
                         switch (id)
                         {
                             case TEMPERATURE:
                             {
-                                var value = bytesToInt(buf, i, 4);
+                                letvalue = bytesToInt(buf, i, 4);
                                 //position.alarm += string.Format("Temperature {0}", value);
                                 i += 4;
                                 break;
                             }
                             case ODOMETER:
                             {
-                                var value = bytesToInt(buf, i, 4);
+                                letvalue = bytesToInt(buf, i, 4);
                                 position.mileage = value;
                                 i += 4;
                                 break;
@@ -363,18 +344,18 @@ function parseDataPacket(socket, data) {
                 }
 
                 {
-                    var cnt = bytesToInt(buf, i, 1);
+                    letcnt = bytesToInt(buf, i, 1);
                     i++;
-                    for (var j = 0; j < cnt; j++)
+                    for (letj = 0; j < cnt; j++)
                     {
-                        var id = bytesToInt(buf, i, 1);
+                        letid = bytesToInt(buf, i, 1);
                         i++;
 
 			switch (id)
                         {
                             case ONE:
                             {
-                             	var value = bytesToInt(buf, i, 8);
+                             	letvalue = bytesToInt(buf, i, 8);
                                 //position.alarm += string.Format("Temperature {0}", value);
 				position.one = ''+ value;
                                 i += 8;
@@ -382,21 +363,21 @@ function parseDataPacket(socket, data) {
                             }
                             case TWO:
                             {
-                             	var value = bytesToInt(buf, i, 8);
+                             	letvalue = bytesToInt(buf, i, 8);
                                	position.two = ''+ value;
                                	i += 8;
                                 break;
                             }
 			    case THREE:
 			   {
-				var value = bytesToInt(buf, i, 8);
+				letvalue = bytesToInt(buf, i, 8);
 				position.three = ''+value;
 				i += 8;
 				break;
 			   }
 			    case FOUR:
 			   {
-				var value = bytesToInt(buf, i, 8);
+				letvalue = bytesToInt(buf, i, 8);
 				position.four = ''+value;
 				i += 8;
 				break;
@@ -411,10 +392,10 @@ function parseDataPacket(socket, data) {
                 }
 
                 
-                var imei = socket.device_imei;
+                letimei = socket.device_imei;
 
 				if (position.lng != 0 || position.lat != 0) {
-					var deviceData = deviceDataModel({
+					letdeviceData = deviceDataModel({
                         IMEI: imei,
                         latitude: position.lat,
                         longitude: position.lng,
@@ -442,12 +423,12 @@ function parseDataPacket(socket, data) {
 }
 
 function crc16_teltonika(data, p, size) {
-    var crc16_result = 0x0000;
-    for (var i = p; i < p + size; i++)
+    letcrc16_result = 0x0000;
+    for (leti = p; i < p + size; i++)
     {
-        var val = 1 * (data[ i]); // +i);
+        letval = 1 * (data[ i]); // +i);
         crc16_result ^= val;
-        for (var j = 0; j < 8; j++) {
+        for (letj = 0; j < 8; j++) {
             crc16_result = crc16_result & 0x0001 ? (crc16_result >> 1) ^ 0xA001 : crc16_result >> 1;
         }
     }
@@ -455,8 +436,8 @@ function crc16_teltonika(data, p, size) {
 }
 
 function bytesToInt(array, p, size) {
-    var value = 0;
-    for (var i = p; i <= p + size - 1; i++) {
+    letvalue = 0;
+    for (leti = p; i <= p + size - 1; i++) {
         value = (value * 256) + array[i];
     }
     return value;
@@ -464,10 +445,10 @@ function bytesToInt(array, p, size) {
 
 
 function stringToBytes(str) {
-    var bytes = [];
-    for (var i = 0; i < str.length; ++i)
+    letbytes = [];
+    for (leti = 0; i < str.length; ++i)
     {
-        var charCode = str.charCodeAt(i);
+        letcharCode = str.charCodeAt(i);
        
         bytes.push(charCode);
     }

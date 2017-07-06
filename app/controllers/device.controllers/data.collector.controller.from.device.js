@@ -4,12 +4,12 @@
 
 "use strict";
 
-var net = require('net');
-var config = require('./../../config/config.json'),
+let net = require('net');
+let config = require('./../../config/config.json'),
     parser = require('./parse.js');
 
 module.exports = function(){
-    var tcp = net.createServer(function (socket) {
+    let tcp = net.createServer(function (socket) {
            
         socket.on('connect',function(){
         	console.log('successfully connected to tcp client');
@@ -19,7 +19,7 @@ module.exports = function(){
             console.log('data recieved from device: ',typeof deviceData);
           // console.log("data:",JSON.stringify(deviceData));
             try{
-                var parse = parser.parse(socket,deviceData);
+                let parse = parser.parse(socket,deviceData);
             } catch (ex) {
              	console.log('error in parsing data',ex);
             }

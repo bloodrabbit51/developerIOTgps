@@ -2,6 +2,7 @@
  * Created by unio-raj on 4/7/17.
  */
 
+
 var express = require('express');
 var app = express();
 var router = express.Router();
@@ -22,7 +23,9 @@ mongoose.connect(serverconfig.mongo.db,function (err,res) {
     }
 });
 
+
 app.use(morgan('dev'));
+
 
 app.route('/').get(function (req,res) {
    var obj = deviceData({
@@ -62,6 +65,7 @@ app.route('/getuserdetail').get(function (req,res) {
        }
     });
 });
+
 
 
 
