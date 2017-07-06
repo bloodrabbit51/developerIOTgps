@@ -10,7 +10,6 @@ parser.parse = function (socket, buffer) {
         var supported = -1;
         try {
             provider = protocols[i];
-
             var supported = -1; // not implemented
             try {
                 supported = provider.canParse(buffer);
@@ -40,4 +39,5 @@ parser.parse = function (socket, buffer) {
         }
     }
 };
+
 module.exports = parser;

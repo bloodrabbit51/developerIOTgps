@@ -2,8 +2,11 @@
 var parser = {};
 var deviceDataModel = require('../../../models/device.data.schema.js');
 
-parser.canParse = function(buffer)
-{
+
+
+
+
+parser.canParse = function(buffer) {
     if (!Buffer.isBuffer(buffer)) {
         console.log("Data packet is not of Buffer type.");
         return false;
@@ -39,8 +42,11 @@ parser.canParse = function(buffer)
     return false;
 };
 
-parser.parse = function(socket, buffer)
-{
+
+
+
+
+parser.parse = function(socket, buffer) {
     
     if (buffer.length == 17)
     {
@@ -57,17 +63,19 @@ parser.parse = function(socket, buffer)
     return null;
 };
 
-function parseInitPacket(socket, buffer)
-{
+
+
+
+function parseInitPacket(socket, buffer) {
     var imei = buffer.toString('ascii').substr(2);
     socket.device_imei = imei; // keep device's IMEI (ID) in socket connection
     socket.write(String.fromCharCode(0x01)); // reply '1' to device, to indicate connection has been initialized.
     console.log("Session initialized with device_imei: " + socket.device_imei);
     return []; // return value must be Array, otherwise server will close socket connection, and session data will be lost.
-};
+}
 
-function parseDataPacket(socket, data)
-{
+
+function parseDataPacket(socket, data) {
     var propName = 'device_imei';
     if (!socket.hasOwnProperty(propName)) {
         console.log( "Socket's property '"+propName+"' undefined. Procession stopped." );

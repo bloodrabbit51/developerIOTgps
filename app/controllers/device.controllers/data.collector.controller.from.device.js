@@ -20,8 +20,6 @@ module.exports = function(){
           // console.log("data:",JSON.stringify(deviceData));
             try{
                 var parse = parser.parse(socket,deviceData);
-		console.log('data recieved haha ', parse);
-		      
             } catch (ex) {
              	console.log('error in parsing data',ex);
             }
