@@ -6,7 +6,7 @@
 
 let net = require('net');
 let config = require('./../../config/config.json'),
-    dataParsing = require('./device.data.parsing.js');
+    parseData = require('./parse.js');
 
 
 module.exports = function(){
@@ -17,12 +17,13 @@ module.exports = function(){
         });
 
         socket.on('data', function (deviceData) {
-            dataParsing.returningTheCompleteDataObject(socket,deviceData).then(function(value){
-                console.log('data recived: ',value);
-            }).catch(function (err) {
-                console.log('error occure: ',err);
+                parseData.parse(socket,deviceData).then(function (value) {
+                    console.log('data recieved',value);
+                }).catch(function (err) {
+                    console.log('error occure');
+                });
             });
-        });
+
 
         
 

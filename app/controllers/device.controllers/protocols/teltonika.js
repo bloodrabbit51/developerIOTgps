@@ -62,6 +62,7 @@ parser.parse = function (socket, buffer) {
 // }
 
 
+
 function parseDataPacket(socket, data) {
     let propName = 'device_imei';
 
@@ -430,8 +431,6 @@ function newParsingfunction(){
 * getting the data
 * */
 
-    let timeStamData = new Promise(function(resolve,reject){
-        postion.timestamp = bytesToInt(bufferData,,8)
-    });
+
 }
 module.exports = parser;

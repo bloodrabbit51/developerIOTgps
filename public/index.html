@@ -1,66 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
+  <p>this is just a paragraph.</p>
+  <script>
+    var socket = io.connect('http://localhost:7070');
 
-<div class="container">
-  <h2>OSS GPS</h2>
-  <p>Basic tracking data</p>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>IMEI</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        <th>Speed</th>
-        <th>RPM</th>
-        <th>Fuel</th>
-        <th>Distance</th>
-        <th>TPS</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Default</td>
-        <td>Defaultson</td>
-        <td>def@somemail.com</td>
-      </tr>      
-      <tr class="success">
-        <td>Success</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
-      <tr class="danger">
-        <td>Danger</td>
-        <td>Moe</td>
-        <td>mary@example.com</td>
-      </tr>
-      <tr class="info">
-        <td>Info</td>
-        <td>Dooley</td>
-        <td>july@example.com</td>
-      </tr>
-      <tr class="warning">
-        <td>Warning</td>
-        <td>Refs</td>
-        <td>bo@example.com</td>
-      </tr>
-      <tr class="active">
-        <td>Active</td>
-        <td>Activeson</td>
-        <td>act@example.com</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+    socket.on('news',function(data){
+        console.log(data);
+    });
+  </script>
 </body>
 </html>
-

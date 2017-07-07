@@ -6,7 +6,7 @@
 function  convertingTheSingleDataIntoDecimalFormatToHexaDecimalToAgainDecimal(dataArray ,startingIndexOfDataToBeFound ,sizeOfDataToBeParsed) {
     return new Promise(resolve=>{
        let value = 0;
-       for(let i = 0;i < (startingIndexOfDataToBeFound + sizeOfDataToBeParsed -1);i++){
+       for(let i = startingIndexOfDataToBeFound ;i <= (startingIndexOfDataToBeFound + sizeOfDataToBeParsed -1) ; i++){
            value = (value*256) + dataArray[i];
        }
        resolve(value);
@@ -32,3 +32,4 @@ function searchingForTheIOElementsInArray(dataArray ,searchBit ,sizeOfDataElemen
 
     });
 }
+

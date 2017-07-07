@@ -5,6 +5,8 @@
 
 var express = require('express');
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 var router = express.Router();
 var serverconfig = require('./app/config/config.json');
 var devicedataroute = require('./app/routes/device.data.demo');
@@ -66,9 +68,15 @@ app.route('/getuserdetail').get(function (req,res) {
     });
 });
 
+app.route('/index.html').get(function (req,res) {
+    res.sendFile(__dirname+'/public/index.html');
+});
 
+io.on('connection',function (socket) {
+    console.log('Connection Stablished');
+    socket.emit('news', { hello : "world" });
+});
 
-
-app.listen(serverconfig.http.port,function () {
+server.listen(serverconfig.http.port,function () {
     console.log("http server is running on port number: 7070");
 });
