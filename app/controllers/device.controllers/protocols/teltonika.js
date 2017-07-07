@@ -1,19 +1,14 @@
-﻿
-let parser = {};
+﻿let parser = {};
 let deviceDataModel = require('../../../models/device.data.schema.js');
 
 
-
-
-
-parser.canParse = function(buffer) {
+parser.canParse = function (buffer) {
     if (!Buffer.isBuffer(buffer)) {
         console.log("Data packet is not of Buffer type.");
         return false;
     }
 
-    if (buffer.length == 17)
-    {
+    if (buffer.length == 17) {
         if (buffer[0] == 0 && buffer[1] == 15) {
             return true;
         } else {
@@ -33,9 +28,9 @@ parser.canParse = function(buffer) {
         return false;
     }
 
-   
-    letlengthAVL = buffer.readUInt32BE(4);
-    if ( (4 + 4 + lengthAVL + 4) === buffer.length ) {
+
+    let lengthAVL = buffer.readUInt32BE(4);
+    if ((4 + 4 + lengthAVL + 4) === buffer.length) {
 
         return true;
     }
@@ -43,86 +38,87 @@ parser.canParse = function(buffer) {
 };
 
 
-parser.parse = function(socket, buffer)
-{
-    if (buffer.length == 17)
-    {
+parser.parse = function (socket, buffer) {
+    if (buffer.length == 17) {
         if (buffer[0] == 0 && buffer[1] == 15) {
             return parseInitPacket(socket, buffer);
         } else {
             return null;
         }
     }
+    //this is executing.
     if (buffer.length > 12) {
         return parseDataPacket(socket, buffer);
     }
 };
 
 
-
-
-function parseInitPacket(socket, buffer) {
-    letimei = buffer.toString('ascii').substr(2);
-    socket.device_imei = imei; // keep device's IMEI (ID) in socket connection
-    socket.write(String.fromCharCode(0x01)); // reply '1' to device, to indicate connection has been initialized.
-    console.log("Session initialized with device_imei: " + socket.device_imei);
-    return []; // return value must be Array, otherwise server will close socket connection, and session data will be lost.
-}
+// function parseInitPacket(socket, buffer) {
+//     let  imei = buffer.toString('ascii').substr(2);
+//     socket.device_imei = imei; // keep device's IMEI (ID) in socket connection
+//     socket.write(String.fromCharCode(0x01)); // reply '1' to device, to indicate connection has been initialized.
+//     console.log("Session initialized with device_imei: " + socket.device_imei);
+//     return []; // return value must be Array, otherwise server will close socket connection, and session data will be lost.
+// }
 
 
 function parseDataPacket(socket, data) {
-    letpropName = 'device_imei';
+    let propName = 'device_imei';
+
     if (!socket.hasOwnProperty(propName)) {
-        console.log( "Socket's property '"+propName+"' undefined. Procession stopped." );
+        console.log("Socket's property '" + propName + "' undefined. Procession stopped.");
         socket.write(0); // reply '0' to deny session.
         // here, socket is still open.
         return;
     }
-    letbuf;
-	if (data instanceof Buffer) {
+
+    if (data instanceof Buffer) {
         buf = data;
     } else {
         buf = stringToBytes(data);
     }
-    letgps = [];
-    letsizeAVL = bytesToInt(buf, 4, 4);
-    letrCRC = bytesToInt(buf, buf.length - 4, 4);
-    letcCRC = crc16_teltonika(buf, 8, sizeAVL);
-    leti = 8;
-    if (sizeAVL == buf.length - 4 * 3 && rCRC == cCRC)
-    {
-        letcodec = bytesToInt(buf, i, 1);
+    let gps = [];
+
+    let sizeAVL = bytesToInt(buf, 4, 4);
+
+    let rCRC = bytesToInt(buf, buf.length - 4, 4);
+
+    let cCRC = crc16_teltonika(buf, 8, sizeAVL);
+
+    let i = 8;
+    //ccrc will not equal to rcrc when there is data loss
+
+    if (sizeAVL == buf.length - 4 * 3 && rCRC == cCRC) {
+        let codec = bytesToInt(buf, i, 1);
         i++;
-        letrecs = bytesToInt(buf, i, 1);
+        let recs = bytesToInt(buf, i, 1);
         i++;
-        console.log( codec, recs);
-        
-	letACC = 1;
-	letDOOR = 2;
-	letAnalog = 4;
-	letGSM = 21;
-	letRPM = 6;
-	letVOLTAGE = 7;
-	letGPSPOWER = 8;
-	letTEMPERATURE = 9;
-	letODOMETER = 16;
-	letSTOP = 9;
-	letTRIP = 28;
-	letIMMOBILIZER = 29;
-	letAUTHORIZED = 30;
-	letGREEDRIVING = 253;
-	letOVERSPEED = 33;
-	letTPS = 7;
-	letSPEED = 8;
-	letONE = 76;
-	letTWO = 77;
-	letTHREE = 79;
-	letFOUR = 71;
-        if (codec == 0x08)
-        {
-            for (letn = 0; n <1; n++)
-            {
-                letposition = {};
+        console.log(codec, recs);
+
+        let ACC = 1;
+        let DOOR = 2;
+        let Analog = 4;
+        let GSM = 21;
+        let RPM = 6;
+        let VOLTAGE = 7;
+        let GPSPOWER = 8;
+        let TEMPERATURE = 9;
+        let ODOMETER = 16;
+        let STOP = 9;
+        let TRIP = 28;
+        let IMMOBILIZER = 29;
+        let AUTHORIZED = 30;
+        let GREEDRIVING = 253;
+        let OVERSPEED = 33;
+        let TPS = 7;
+        let SPEED = 8;
+        let ONE = 76;
+        let TWO = 77;
+        let THREE = 79;
+        let FOUR = 71;
+        if (codec == 0x08) {
+            //for (let n = 0; n < 1; n++) {
+                let position = {};
 
                 position.timestamp = bytesToInt(buf, i, 8);
                 i += 8;
@@ -163,15 +159,15 @@ function parseDataPacket(socket, data) {
 
                 position.status = "Na";
                 position.alarm = "Na";
-		        position.fuel = "Na";
-		        position.rpm = "Na";
-		        position.tps = "Na";
-		        position.state = "Na";
-		        position.speedobd = "Na";
-		        position.one = "Na";
-		        position.two = "Na";
-		        position.three = "Na";
-		        position.four = "Na";
+                position.fuel = "Na";
+                position.rpm = "Na";
+                position.tps = "Na";
+                position.state = "Na";
+                position.speedobd = "Na";
+                position.one = "Na";
+                position.two = "Na";
+                position.three = "Na";
+                position.four = "Na";
 
                 if (position.satellite >= 3)
                     position.status = "A";
@@ -188,71 +184,59 @@ function parseDataPacket(socket, data) {
                 i++;
 
                 {
-                    letcnt = bytesToInt(buf, i, 1);
+                    let cnt = bytesToInt(buf, i, 1);
                     i++;
-                    for (letj = 0; j < cnt; j++)
-                    {
-                        letid = bytesToInt(buf, i, 1);
+                    for (let j = 0; j < cnt; j++) {
+                        let id = bytesToInt(buf, i, 1);
                         i++;
                         //Add output status
-                        switch (id)
-                        {
-                            case SPEED:
-                            {
-                                letvalue = bytesToInt(buf, i, 1);
-				position.speedobd = ''+value;
+                        switch (id) {
+                            case SPEED: {
+                                let value = bytesToInt(buf, i, 1);
+                                position.speedobd = '' + value;
                                 i++;
                                 break;
                             }
-                            case TPS:
-                            {
-                                letvalue = bytesToInt(buf, i, 1);
-                                
-				position.tps = ''+value;
+                            case TPS: {
+                                let value = bytesToInt(buf, i, 1);
+
+                                position.tps = '' + value;
                                 i++;
                                 break;
                             }
-                            case GSM:
-                            {
-                                letvalue = bytesToInt(buf, i, 1);
-                                
-				console.log('gsm gsm gsm : '+ value);
+                            case GSM: {
+                                let value = bytesToInt(buf, i, 1);
+
+                                console.log('gsm gsm gsm : ' + value);
                                 i++;
-				
+
                                 break;
                             }
-                            case STOP:
-                            {
-                                letvalue = bytesToInt(buf, i, 1);
-				                position.fuel = ''+value;
-				                log.debug('Fuel level value : '+ value);
+                            case STOP: {
+                                let value = bytesToInt(buf, i, 1);
+                                position.fuel = '' + value;
+                                log.debug('Fuel level value : ' + value);
                                 i++;
                                 break;
                             }
-                            case IMMOBILIZER:
-                            {
-                                letvalue = bytesToInt(buf, i, 1);
+                            case IMMOBILIZER: {
+                                let value = bytesToInt(buf, i, 1);
                                 position.alarm = value == 0 ? "Activate Anti-carjacking success" : "Emergency release success";
                                 i++;
                                 break;
                             }
-                            case GREEDRIVING:
-                            {
-                                letvalue = bytesToInt(buf, i, 1);
-                                switch (value)
-                                {
-                                    case 1:
-                                    {
+                            case GREEDRIVING: {
+                                let value = bytesToInt(buf, i, 1);
+                                switch (value) {
+                                    case 1: {
                                         position.state = "Harsh accleration !!";
                                         break;
                                     }
-                                    case 2:
-                                    {
+                                    case 2: {
                                         position.state = "Harsh braking !!";
                                         break;
                                     }
-                                    case 3:
-                                    {
+                                    case 3: {
                                         position.state = "Harsh cornering !!";
                                         break;
                                     }
@@ -262,8 +246,7 @@ function parseDataPacket(socket, data) {
                                 i++;
                                 break;
                             }
-                            default:
-                            {
+                            default: {
                                 i++;
                                 break;
                             }
@@ -274,33 +257,28 @@ function parseDataPacket(socket, data) {
 
                 //read 2 byte
                 {
-                    letcnt = bytesToInt(buf, i, 1);
+                    let cnt = bytesToInt(buf, i, 1);
                     i++;
-                    for (letj = 0; j < cnt; j++)
-                    {
-                        letid = bytesToInt(buf, i, 1);
+                    for (let j = 0; j < cnt; j++) {
+                        let id = bytesToInt(buf, i, 1);
                         i++;
 
-                        switch (id)
-                        {
-                            case Analog:
-                            {
-                                letvalue = bytesToInt(buf, i, 2);
+                        switch (id) {
+                            case Analog: {
+                                let value = bytesToInt(buf, i, 2);
                                 if (value < 12)
-                                    //position.alarm += string.Format("Low voltage", value);
-                                i += 2;
+                                //position.alarm += string.Format("Low voltage", value);
+                                    i += 2;
                                 break;
                             }
-                            case RPM:
-                            {
-                                letvalue = bytesToInt(buf, i, 2);
+                            case RPM: {
+                                let value = bytesToInt(buf, i, 2);
 
-				position.rpm = ''+value;
+                                position.rpm = '' + value;
                                 i += 2;
                                 break;
                             }
-                            default:
-                            {
+                            default: {
                                 i += 2;
                                 break;
                             }
@@ -311,31 +289,26 @@ function parseDataPacket(socket, data) {
 
                 //read 4 byte
                 {
-                    letcnt = bytesToInt(buf, i, 1);
+                    let cnt = bytesToInt(buf, i, 1);
                     i++;
-                    for (letj = 0; j < cnt; j++)
-                    {
-                        letid = bytesToInt(buf, i, 1);
+                    for (let j = 0; j < cnt; j++) {
+                        let id = bytesToInt(buf, i, 1);
                         i++;
 
-                        switch (id)
-                        {
-                            case TEMPERATURE:
-                            {
-                                letvalue = bytesToInt(buf, i, 4);
+                        switch (id) {
+                            case TEMPERATURE: {
+                                let value = bytesToInt(buf, i, 4);
                                 //position.alarm += string.Format("Temperature {0}", value);
                                 i += 4;
                                 break;
                             }
-                            case ODOMETER:
-                            {
-                                letvalue = bytesToInt(buf, i, 4);
+                            case ODOMETER: {
+                                let value = bytesToInt(buf, i, 4);
                                 position.mileage = value;
                                 i += 4;
                                 break;
                             }
-                            default:
-                            {
+                            default: {
                                 i += 4;
                                 break;
                             }
@@ -344,58 +317,51 @@ function parseDataPacket(socket, data) {
                 }
 
                 {
-                    letcnt = bytesToInt(buf, i, 1);
+                    let cnt = bytesToInt(buf, i, 1);
                     i++;
-                    for (letj = 0; j < cnt; j++)
-                    {
-                        letid = bytesToInt(buf, i, 1);
+                    for (let j = 0; j < cnt; j++) {
+                        let id = bytesToInt(buf, i, 1);
                         i++;
 
-			switch (id)
-                        {
-                            case ONE:
-                            {
-                             	letvalue = bytesToInt(buf, i, 8);
+                        switch (id) {
+                            case ONE: {
+                                let value = bytesToInt(buf, i, 8);
                                 //position.alarm += string.Format("Temperature {0}", value);
-				position.one = ''+ value;
+                                position.one = '' + value;
                                 i += 8;
                                 break;
                             }
-                            case TWO:
-                            {
-                             	letvalue = bytesToInt(buf, i, 8);
-                               	position.two = ''+ value;
-                               	i += 8;
+                            case TWO: {
+                                let value = bytesToInt(buf, i, 8);
+                                position.two = '' + value;
+                                i += 8;
                                 break;
                             }
-			    case THREE:
-			   {
-				letvalue = bytesToInt(buf, i, 8);
-				position.three = ''+value;
-				i += 8;
-				break;
-			   }
-			    case FOUR:
-			   {
-				letvalue = bytesToInt(buf, i, 8);
-				position.four = ''+value;
-				i += 8;
-				break;
-			   }
-                            default:
-                            {
+                            case THREE: {
+                                let value = bytesToInt(buf, i, 8);
+                                position.three = '' + value;
                                 i += 8;
-                               	break;
+                                break;
                             }
-			}
+                            case FOUR: {
+                                let value = bytesToInt(buf, i, 8);
+                                position.four = '' + value;
+                                i += 8;
+                                break;
+                            }
+                            default: {
+                                i += 8;
+                                break;
+                            }
+                        }
                     }
                 }
 
-                
-                letimei = socket.device_imei;
 
-				if (position.lng != 0 || position.lat != 0) {
-					letdeviceData = deviceDataModel({
+                let imei = socket.device_imei;
+
+                if (position.lng != 0 || position.lat != 0) {
+                    let deviceData = deviceDataModel({
                         IMEI: imei,
                         latitude: position.lat,
                         longitude: position.lng,
@@ -403,32 +369,31 @@ function parseDataPacket(socket, data) {
                         vehicle_speed: position.speed,
                         fuel: position.fuel,
                         engine_rpm: position.rpm
-					});
-					gps.push(deviceData);
-                                        console.log(deviceData);
-
-					deviceData.save(function (err) {
-                       if(err){
-                           console.log("error in data insertion",err);
-                       } else {
-                           console.log('insertion of data in database successfull');
-                       }
                     });
-		}
-            }
+                    gps.push(deviceData);
+                    console.log(deviceData);
+
+                    deviceData.save(function (err) {
+                        if (err) {
+                            console.log("error in data insertion", err);
+                        } else {
+                            console.log('insertion of data in database successfull');
+                        }
+                    });
+                }
+            //}
         }
     }
-    console.log('data is here:',gps);
+    console.log('data is here:', gps);
     return null;
 }
 
 function crc16_teltonika(data, p, size) {
-    letcrc16_result = 0x0000;
-    for (leti = p; i < p + size; i++)
-    {
-        letval = 1 * (data[ i]); // +i);
+    let crc16_result = 0x0000;
+    for (let i = p; i < p + size; i++) {
+        let val = 1 * (data[i]); // +i);
         crc16_result ^= val;
-        for (letj = 0; j < 8; j++) {
+        for (let j = 0; j < 8; j++) {
             crc16_result = crc16_result & 0x0001 ? (crc16_result >> 1) ^ 0xA001 : crc16_result >> 1;
         }
     }
@@ -436,8 +401,8 @@ function crc16_teltonika(data, p, size) {
 }
 
 function bytesToInt(array, p, size) {
-    letvalue = 0;
-    for (leti = p; i <= p + size - 1; i++) {
+    let value = 0;
+    for (let i = p; i <= p + size - 1; i++) {
         value = (value * 256) + array[i];
     }
     return value;
@@ -445,14 +410,28 @@ function bytesToInt(array, p, size) {
 
 
 function stringToBytes(str) {
-    letbytes = [];
-    for (leti = 0; i < str.length; ++i)
-    {
-        letcharCode = str.charCodeAt(i);
-       
+    let bytes = [];
+    for (let i = 0; i < str.length; ++i) {
+        let charCode = str.charCodeAt(i);
         bytes.push(charCode);
     }
     return bytes;
 }
+function newParsingfunction(){
+    //converting data into bytes
+    let bufferData;
+    let postion ={};
+    if(data instanceof  Buffer){
+        bufferData = data;
+    }else{
+        bufferData = stringToBytes(data);
+    }
+/*
+* getting the data
+* */
 
+    let timeStamData = new Promise(function(resolve,reject){
+        postion.timestamp = bytesToInt(bufferData,,8)
+    });
+}
 module.exports = parser;
