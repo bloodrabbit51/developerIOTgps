@@ -1,7 +1,7 @@
 /**
  * Created by unio-raj on 6/7/17.
  */
-
+"use strict";
 
 function  convertingTheSingleDataIntoDecimalFormatToHexaDecimalToAgainDecimal(dataArray ,startingIndexOfDataToBeFound ,sizeOfDataToBeParsed) {
     return new Promise(resolve=>{
