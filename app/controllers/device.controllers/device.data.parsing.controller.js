@@ -32,4 +32,17 @@ function searchingForTheIOElementsInArray(dataArray ,searchBit ,sizeOfDataElemen
 
     });
 }
+/*
+* validation of IMEI number should be done
+*/
+exports.validatingDataPackets = function(deviceIMEIDataPacket){
+  return new new Promise(function(resolve, reject) {
 
+    if(true){
+      resolve(0x01);
+    }else {
+      reject(0x00)
+    }
+
+  });
+};

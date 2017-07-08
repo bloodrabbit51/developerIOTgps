@@ -2,12 +2,10 @@
 let parser = {};
 let teltonika = require('./protocols/teltonika');
 let protocols = [teltonika];
-let parseData = require('./device.data.parsing.js');
+//let parseData = require('./device.data.parsing.js');
 
 exports.parse =  function (socket, buffer) {
-   return new Promise(function (resolve) {
-
-
+   return new Promise(function (resolve ,reject) {
         let provider;
         for (let i = 0; i < protocols.length; i++) {
             try {
@@ -16,21 +14,16 @@ exports.parse =  function (socket, buffer) {
                 try {
                     supported = provider.canParse(buffer);
                 } catch (ex) {
-                    console.log('protocol provider failure: ' + ex);
+                    reject(ex);
                 }
             } catch (exception) {
-                console.log('error', exception);
+                reject(exception);
             }
             try {
-                parseData(socket,buffer).then(function (parseddata) {
-                   resolve(parseddata);
-                }).catch(function (error) {
-                    resolve(error);
-                });
+              resolve(protocols.parse(socket,buffer));
             } catch (ex) {
-                console.log('parsing failure: ' + ex);
+                reject(ex);
             }
         }
     });
 };
-

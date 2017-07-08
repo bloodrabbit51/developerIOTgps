@@ -46,20 +46,20 @@ parser.parse = function (socket, buffer) {
             return null;
         }
     }
-    //this is executing.
+    
     if (buffer.length > 12) {
         return parseDataPacket(socket, buffer);
     }
 };
 
 
-// function parseInitPacket(socket, buffer) {
-//     let  imei = buffer.toString('ascii').substr(2);
-//     socket.device_imei = imei; // keep device's IMEI (ID) in socket connection
-//     socket.write(String.fromCharCode(0x01)); // reply '1' to device, to indicate connection has been initialized.
-//     console.log("Session initialized with device_imei: " + socket.device_imei);
-//     return []; // return value must be Array, otherwise server will close socket connection, and session data will be lost.
-// }
+function parseInitPacket(socket, buffer) {
+    let  imei = buffer.toString('ascii').substr(2);
+    socket.device_imei = imei; // keep device's IMEI (ID) in socket connection
+    socket.write(String.fromCharCode(0x01)); // reply '1' to device, to indicate connection has been initialized.
+    console.log("Session initialized with device_imei: " + socket.device_imei);
+    return []; // return value must be Array, otherwise server will close socket connection, and session data will be lost.
+}
 
 
 
