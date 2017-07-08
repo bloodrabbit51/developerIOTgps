@@ -4,17 +4,18 @@
 "use strict";
 
 function  convertingTheSingleDataIntoDecimalFormatToHexaDecimalToAgainDecimal(dataArray ,startingIndexOfDataToBeFound ,sizeOfDataToBeParsed) {
-    return new Promise(resolve=>{
+return new Promise(resolve=>{
        let value = 0;
-       for(let i = startingIndexOfDataToBeFound ;i <= (startingIndexOfDataToBeFound + sizeOfDataToBeParsed -1) ; i++){
+       for(let i = startingIndexOfDataToBeFound;i < (startingIndexOfDataToBeFound + sizeOfDataToBeParsed);i++){
            value = (value*256) + dataArray[i];
        }
        resolve(value);
     });
 }
 
-exports.returningTheCompleteDataObject = async function(socket,dataArray){
-    let completeParsedDataObject = {
+exports.returningTheCompleteDataObject = async function(socket,newDataArray){
+ var dataArray = ((new Buffer(newDataArray)).toJSON()).data;
+let completeParsedDataObject = {
         logitude : convertingTheSingleDataIntoDecimalFormatToHexaDecimalToAgainDecimal(dataArray,19,4),
         latitude : convertingTheSingleDataIntoDecimalFormatToHexaDecimalToAgainDecimal(dataArray,23,4),
         altitude : convertingTheSingleDataIntoDecimalFormatToHexaDecimalToAgainDecimal(dataArray,27,2),
@@ -41,7 +42,7 @@ exports.validatingDataPackets = function(deviceIMEIDataPacket){
     if(true){
       resolve(0x01);
     }else {
-      reject(0x00)
+      reject(0x00);
     }
 
   });

@@ -17,6 +17,7 @@ module.exports = function(){
         	console.log('successfully connected to tcp client');
         });
 
+<<<<<<< HEAD
 
         socket.on('data', function (deviceRecievedData) {
           /*
@@ -28,6 +29,21 @@ module.exports = function(){
           */
                   socket.write(String.fromCharCode(0x01));
             });
+=======
+        socket.on('data', function (deviceData) {
+	//console.log(JSON.strigify(dieviceData,null,2));
+	var buf = new Buffer(deviceData);
+	console.log(buf.toJSON().data.length);  
+	if(buf.toJSON().data.length == 17){	
+socket.write(String.fromCharCode(0x01));  }else{        
+dataParsing.returningTheCompleteDataObject(socket,deviceData).then(function(value){
+                console.log('data recived: ',value);
+            }).catch(function (err) {
+                console.log('error occure: ',err);
+            });
+}
+        });
+>>>>>>> 92211cab992472879a5bb0aac067f008a3b45e8c
 
 
         socket.on('close', function () {
