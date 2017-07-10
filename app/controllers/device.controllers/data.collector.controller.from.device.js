@@ -23,7 +23,7 @@ module.exports = function(){
 	if(buf.toJSON().data.length == 17){	
 socket.write(String.fromCharCode(0x01));  }else{        
 dataParsing.returningTheCompleteDataObject(socket,deviceData).then(function(value){
-                console.log('data recived: ',value);
+                console.log('data recived: ',value.latitude);
             }).catch(function (err) {
                 console.log('error occure: ',err);
             });
