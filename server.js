@@ -5,7 +5,7 @@
 
 var express = require('express');
 var app = express();
-exports.server = require('http').Server(app);
+var server = require('http').Server(app);
 var router = express.Router();
 var serverconfig = require('./app/config/config.json');
 var devicedataroute = require('./app/routes/device.data.demo');
@@ -13,6 +13,7 @@ var gpsdevicedataController = require('./app/controllers/device.controllers/data
 var mongoose = require('mongoose');
 var deviceData = require('./app/models/device.data.schema.js');
 var morgan = require('morgan');
+var io = require('socket.io')(server);
 
 
 mongoose.connect(serverconfig.mongo.db, function (err, res) {
@@ -69,7 +70,15 @@ app.route('/index.html').get(function (req, res) {
     res.sendFile(__dirname + '/public/index.html');
 });
 
+io.on('connection',function (socket) {
+    console.log('connection with http succesfully created');
+    socket.emit('news',{hello : "i am socket http"});
+});
+
+
 
 server.listen(serverconfig.http.port, function () {
     console.log("http server is running on port number: 7070");
 });
+
+

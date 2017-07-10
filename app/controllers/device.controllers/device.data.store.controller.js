@@ -4,16 +4,16 @@
 
 let deviceDataModel = require('../../models/device.data.schema.js');
 
-exports.savingTheDataCommingFromDeviceToTheMongoDB = function(){
+exports.savingTheDataCommingFromDeviceToTheMongoDB = function(deviceData){
     let parsedDeviceData = deviceDataModel({
 
     });
 
     parsedDeviceData.save(function(err){
       if(err){
-        console.log();
+        console.log('error occure in saving the data: ',err.message);
       }else {
-        console.log();
+        console.log('data is saved succesfully');
       }
     });
 };

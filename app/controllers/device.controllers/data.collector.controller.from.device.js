@@ -7,7 +7,8 @@
 let net = require('net');
 let config = require('./../../config/config.json'),
     deviceDataParsing = require('./device.data.parsing.controller.js'),
-    deviceDataModel = require('../../models/device.data.schema.js');
+    deviceDataModel = require('../../models/device.data.schema.js'),
+    httpSocket = require('../http.controllers/http.socketio.controllers/sending.device.data.using.socket.js');
 
 
 module.exports = function () {
@@ -27,6 +28,7 @@ module.exports = function () {
                 socket.write(String.fromCharCode(0x01));
             } else {
                 deviceDataParsing.returningTheCompleteDataObject(socket, deviceData).then(function (value) {
+                        httpSocket({hello : "hiii"});
 
                 }).catch(function (err) {
                     console.log('error occure: ', err);

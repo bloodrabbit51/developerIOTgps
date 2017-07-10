@@ -7,7 +7,8 @@
 
 </ul>
   <script>
-    var socket = io.connect('http://localhost:7070');
+    //var socket = io.connect('http://localhost:7070');
+    var socket = io.connect('http://52.43.200.112:7070');
 
     socket.on('news',function(data){
         console.log(data);
