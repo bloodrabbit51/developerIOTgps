@@ -4,7 +4,7 @@
 
 var express = require('express');
 var router = express.Router();
-var devicedatacontroller = require('../controllers/http.controllers/device.data.controller.js');
+var devicedatacontroller = require('../controllers/http.controllers/http.restfull.api.controller/device.data.controller.js');
 
 router.get('/',function (req,res) {
     res.send("hello world");
