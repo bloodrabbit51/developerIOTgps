@@ -3,12 +3,18 @@
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-  <p>this is just a paragraph.</p>
+<ul id="myList">
+
+</ul>
   <script>
     var socket = io.connect('http://localhost:7070');
 
     socket.on('news',function(data){
         console.log(data);
+        var node = document.createElement('LI');
+        var textnode = document.createTextNode(data.hello);
+        node.appendChild(textnode);
+        document.getElementById("myList").appendChild(node);
     });
   </script>
 </body>
