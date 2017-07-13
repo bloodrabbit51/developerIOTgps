@@ -3,6 +3,14 @@
  */
 "use strict";
 
+/*
+ *@author : Rohan Raj
+ *funName : savingTheDataCommingFromDeviceToTheMongoDB
+ *defination : this function is responcible of regenerating hash file
+ *@param : deviceData is the parsed data
+ *@return : it responce back to the called functions in faied or success responce.
+ */
+
 function convertingTheSingleDataIntoDecimalFormatToHexaDecimalToAgainDecimal(dataArray, startingIndexOfDataToBeFound, sizeOfDataToBeParsed) {
     
         let value = 0;
@@ -12,6 +20,14 @@ function convertingTheSingleDataIntoDecimalFormatToHexaDecimalToAgainDecimal(dat
         return value;
     
 }
+
+/*
+ *@author : Rohan Raj
+ *funName : savingTheDataCommingFromDeviceToTheMongoDB
+ *defination : this function is responcible of regenerating hash file
+ *@param : deviceData is the parsed data
+ *@return : it responce back to the called functions in faied or success responce.
+ */
 
 exports.returningTheCompleteDataObject = async function (socket, newDataArray) {
     var dataArray = ((new Buffer(newDataArray)).toJSON()).data;
@@ -33,6 +49,13 @@ exports.returningTheCompleteDataObject = async function (socket, newDataArray) {
     return await completeParsedDataObject;
 };
 
+/*
+ *@author : Rohan Raj
+ *funName : savingTheDataCommingFromDeviceToTheMongoDB
+ *defination : this function is responcible of regenerating hash file
+ *@param : deviceData is the parsed data
+ *@return : it responce back to the called functions in faied or success responce.
+ */
 
 function ParsingOneByteData(dataArray) {
  //  console.log('Array came into one byte array: ',dataArray);
@@ -197,6 +220,14 @@ function ParsingOneByteData(dataArray) {
     });
 }
 
+/*
+ *@author : Rohan Raj
+ *funName : savingTheDataCommingFromDeviceToTheMongoDB
+ *defination : this function is responcible of regenerating hash file
+ *@param : deviceData is the parsed data
+ *@return : it responce back to the called functions in faied or success responce.
+ */
+
 function ParsingTwoByteData(dataArray) {
 	//console.log('recieving data: ',dataArray);
     return new Promise(function (resolve, reject) {
@@ -237,6 +268,14 @@ switch (dataArray[i]) {
     });
 }
 
+/*
+ *@author : Rohan Raj
+ *funName : savingTheDataCommingFromDeviceToTheMongoDB
+ *defination : this function is responcible of regenerating hash file
+ *@param : deviceData is the parsed data
+ *@return : it responce back to the called functions in faied or success responce.
+ */
+
 function ParsingFourByteData(dataArray) {
 	//console.log(dataArray);
     return new Promise(function (resolve, reject) {
@@ -260,14 +299,28 @@ function ParsingFourByteData(dataArray) {
     });
 }
 
+/*
+ *@author : Rohan Raj
+ *funName : savingTheDataCommingFromDeviceToTheMongoDB
+ *defination : this function is responcible of regenerating hash file
+ *@param : deviceData is the parsed data
+ *@return : it responce back to the called functions in faied or success responce.
+ */
+
 function ParsingEightByteData() {
     return new Promise(function (resolve, reject) {
 
     });
 }
-/*
- * validation of IMEI number should be done
+
+ /*
+ *@author : Rohan Raj
+ *funName : savingTheDataCommingFromDeviceToTheMongoDB
+ *defination : validation of IMEI number should be done
+ *@param : deviceData is the parsed data
+ *@return : it responce back to the called functions in faied or success responce.
  */
+
 exports.validatingDataPackets = function (deviceIMEIDataPacket) {
     return new new Promise(function (resolve, reject) {
 

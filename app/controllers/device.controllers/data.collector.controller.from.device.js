@@ -9,7 +9,14 @@ let config = require('./../../config/config.json'),
     deviceDataParsing = require('./device.data.parsing.controller.js'),
     deviceDataStoring = require('./device.data.store.controller.js');
 
-
+/*
+ *@author : Rohan Raj
+ *funName : 
+ *defination : this is tcp listener.
+ *@param : 
+ *@return : 
+ */
+ 
 module.exports = function () {
     let tcp = net.createServer(function (socket) {
 
@@ -28,9 +35,13 @@ module.exports = function () {
             } else{
 		
                 deviceDataParsing.returningTheCompleteDataObject(socket, deviceData).then(function (value) {
+			console.log(value);
 			console.log(value.IOElements);
-//                    deviceDataStoring.savingTheDataCommingFromDeviceToTheMongoDB()
+                 //   deviceDataStoring.savingTheDataCommingFromDeviceToTheMongoDB(value).then(v=>{
 
+                   // }).catch(err=>{
+
+                   // });
                 }).catch(function (err) {
                     console.log('error occure: ', err);
                 });
