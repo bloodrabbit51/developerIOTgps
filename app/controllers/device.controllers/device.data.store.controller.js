@@ -10,7 +10,9 @@ let deviceDataModel = require('../../models/device.data.schema.js');
  */
 exports.savingTheDataCommingFromDeviceToTheMongoDB = function(deviceData){
     return new Promise(function(resolve,reject){
-    	let parsedDeviceData = deviceDataModel(deviceData);
+    	let parsedDeviceData = deviceDataModel({
+        data : deviceData
+      });
 
     parsedDeviceData.save(function(err){
       if(err){

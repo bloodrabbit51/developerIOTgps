@@ -45,7 +45,7 @@ exports.returningTheCompleteDataObject = async function (socket, newDataArray) {
             fourbyteelement: ParsingFourByteData(dataArray.slice(count = count + 1  , count = count+dataArray[count-1]*5))
         }
     };
-	//console.log(dataArray.slice(34,dataArray.length));
+	
     return await completeParsedDataObject;
 };
 
@@ -58,7 +58,7 @@ exports.returningTheCompleteDataObject = async function (socket, newDataArray) {
  */
 
 function ParsingOneByteData(dataArray) {
- //  console.log('Array came into one byte array: ',dataArray);
+ 
 	return new Promise(function (resolve, reject) {
         var obj = {};
         for(let i = 0; i<dataArray.length; i=i+2) {
@@ -97,7 +97,6 @@ function ParsingOneByteData(dataArray) {
                     }
                     break;
                 case 21:
-		//	console.log('gsm signal: ',i,' ',dataArray[i+1]);
                     obj.gsmsignal = dataArray[i+1];
                     break;
                 case 200:
@@ -229,11 +228,9 @@ function ParsingOneByteData(dataArray) {
  */
 
 function ParsingTwoByteData(dataArray) {
-	//console.log('recieving data: ',dataArray);
     return new Promise(function (resolve, reject) {
         var obj = {};
-        for(let i = 0; i<dataArray.length; i=i+3) {
-	//console.log('value of i: ',i);            
+        for(let i = 0; i<dataArray.length; i=i+3) {        
 switch (dataArray[i]) {
                 case 181:
 
@@ -263,7 +260,6 @@ switch (dataArray[i]) {
 
             }
         }
-	//console.log(obj);
         resolve(obj);
     });
 }
@@ -277,7 +273,6 @@ switch (dataArray[i]) {
  */
 
 function ParsingFourByteData(dataArray) {
-	//console.log(dataArray);
     return new Promise(function (resolve, reject) {
         var obj = {};
         for(let i = 0; i<dataArray.length; i=i+5) {

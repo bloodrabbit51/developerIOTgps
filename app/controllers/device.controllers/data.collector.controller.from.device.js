@@ -37,11 +37,11 @@ module.exports = function () {
                 deviceDataParsing.returningTheCompleteDataObject(socket, deviceData).then(function (value) {
 			console.log(value);
 			console.log(value.IOElements);
-                 //   deviceDataStoring.savingTheDataCommingFromDeviceToTheMongoDB(value).then(v=>{
-
-                   // }).catch(err=>{
-
-                   // });
+                   deviceDataStoring.savingTheDataCommingFromDeviceToTheMongoDB(value).then(v=>{
+                      console.log("message: "+ v);  
+                   }).catch(err=>{
+                      console.log("error: "+err.message);
+                   });
                 }).catch(function (err) {
                     console.log('error occure: ', err);
                 });
