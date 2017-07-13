@@ -2,7 +2,7 @@
  * Created by unio-raj on 4/7/17.
  */
 
-
+ 
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
@@ -27,7 +27,7 @@ mongoose.connect(serverconfig.mongo.db, function (err, res) {
 
 app.use(morgan('dev'));
 
-
+ 
 app.route('/').get(function (req, res) {
     var obj = deviceData({
         name: "Rohan Raj",
@@ -75,7 +75,7 @@ io.on('connection',function (socket) {
     socket.emit('news',{hello : "i am socket http"});
 });
 
-
+if()
 
 server.listen(serverconfig.http.port, function () {
     console.log("http server is running on port number: 7070");
