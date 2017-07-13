@@ -6,7 +6,7 @@ let deviceDataModel = require('../../models/device.data.schema.js');
 
 exports.savingTheDataCommingFromDeviceToTheMongoDB = function(deviceData){
     let parsedDeviceData = deviceDataModel({
-
+        
     });
 
     parsedDeviceData.save(function(err){
