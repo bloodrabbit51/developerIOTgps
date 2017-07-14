@@ -8,13 +8,12 @@ var app = express();
 var server = require('http').Server(app);
 var router = express.Router();
 var serverconfig = require('./app/config/config.json');
-var devicedataroute = require('./app/routes/device.data.demo');
+var devicedataroute = require('./app/routes/device.data.route.js');
 var gpsdevicedataController = require('./app/controllers/device.controllers/data.collector.controller.from.device.js')();
 var mongoose = require('mongoose');
-var deviceData = require('./app/models/device.data.schema.js');
 var morgan = require('morgan');
 var io = require('socket.io')(server);
-
+var bodyParser = require('body-parser');
 
 mongoose.connect(serverconfig.mongo.db, function (err, res) {
     if (err) {
@@ -24,55 +23,16 @@ mongoose.connect(serverconfig.mongo.db, function (err, res) {
     }
 });
 
-
+app.use('/index.html', express.static(__dirname + '/public'));
 app.use(morgan('dev'));
-
- 
-app.route('/').get(function (req, res) {
-    var obj = deviceData({
-        name: "Rohan Raj",
-        username: "rohanraj7316@gmail.com",
-        location: "Hyderabad"
-    });
-    obj.save(function (err) {
-        if (err) {
-            res.status(400).json({
-                status: "failed",
-                message: "entering data into database failed"
-            });
-        } else {
-            res.status(200).json({
-                status: "success",
-                message: "entring data into database succesfull"
-            });
-        }
-    });
-});
-
-
-app.route('/getuserdetail').get(function (req, res) {
-    deviceData.find({}, function (err, data) {
-        if (err) {
-            res.status(400).json({
-                status: "failed",
-                message: "error while retriving data: ", err
-            });
-        } else {
-            res.status(200).json({
-                status: "success",
-                data: data
-            });
-        }
-    });
-});
-
-app.route('/index.html').get(function (req, res) {
-    res.sendFile(__dirname + '/public/index.html');
-});
+app.use(bodyParser.json());
+app.use('/',devicedataroute);
 
 io.on('connection',function (socket) {
     console.log('connection with http succesfully created');
-    socket.emit('news',{hello : "i am socket http"});
+    setInterval(function(){
+        socket.emit('news',{hello : "i am socket http"});
+    }, 5000);
 });
 
 

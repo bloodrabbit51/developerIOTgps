@@ -10,12 +10,12 @@ let mongoose = require('mongoose'),
  */
 let deviceDataSchema = new Schema({
     data: {
-        type: String,
-        default: ''
-    },
+    	type: Object,
+    	required: true
+    	},
     created: {
         type: Date,
-        default: Data.now
+        default: Date.now
     }
 });
 // let deviceDataSchema = new Schema({
@@ -46,10 +46,6 @@ let deviceDataSchema = new Schema({
 //             default: ''
 //         },
 //         gpssatellite: {
-//             type: String,
-//             default: ''
-//         },
-//         gpsspeed: {
 //             type: String,
 //             default: ''
 //         },

@@ -1,10 +1,12 @@
 /**
- * Created by unio-raj on 9/7/17.
+ * Created by unio-raj on 4/7/17.
  */
+
 var deviceDataModel = require('../../../models/device.data.schema.js');
 
-exports.sendingDeviceDataUsingSocket = function (req,res) {
-    deviceDataModel.find({created : {$gte : new Date("2017-07-10T13:31:36.270Z").toISOString()}}).
+exports.sendingDeviceDataFromDatabase = function (req,res) {
+	 deviceDataModel.find({created : {$gte : new Date("2017-07-10T13:31:36.270Z").toISOString()}}).
+        select('data').
         exec(function(err,data){
         	if(err)
         		res.status(400).json({
@@ -12,12 +14,11 @@ exports.sendingDeviceDataUsingSocket = function (req,res) {
         			message : err.message
         		});
 
-        		console.log('here: ',data);
-        	// res.status(200).json({
-        	// 	status : true,
-        	// 	message : data
-        	// });
-        });
+        	res.status(200).json({
+        		status : true,
+        		message : data
+        	});
+        });    
 };
 
 // app.route('/getuserdetail').get(function (req, res) {
@@ -37,3 +38,4 @@ exports.sendingDeviceDataUsingSocket = function (req,res) {
 //         }
 //     });
 // });
+
