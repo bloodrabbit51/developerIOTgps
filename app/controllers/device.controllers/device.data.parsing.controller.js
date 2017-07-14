@@ -28,7 +28,7 @@ function convertingTheSingleDataIntoDecimalFormatToHexaDecimalToAgainDecimal(dat
  *@param : deviceData is the parsed data
  *@return : it responce back to the called functions in faied or success responce.
  */
-
+//count = count+dataArray[count-1]*5
 exports.returningTheCompleteDataObject = async function (socket, newDataArray) {
     var dataArray = ((new Buffer(newDataArray)).toJSON()).data;
     var count = 0;

@@ -20,22 +20,3 @@ exports.sendingDeviceDataFromDatabase = function (req,res) {
         	});
         });    
 };
-
-// app.route('/getuserdetail').get(function (req, res) {
-//     deviceData.find({created : {$gte : new Date("2017-07-10T13:31:36.270Z")}}).
-//     select({data : 1}).
-//     exec(function (err, data) {
-//         if (err) {
-//             res.status(400).json({
-//                 status: "failed",
-//                 message: "error while retriving data: ", err
-//             });
-//         } else {
-//             res.status(200).json({
-//                 status: "success",
-//                 data:  data
-//             });
-//         }
-//     });
-// });
-
